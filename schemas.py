@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel,conint
 from typing import Optional
 from datetime import datetime
 from models import EventStatus
@@ -9,7 +9,7 @@ class EventCreate(BaseModel):
     start_time: datetime
     end_time: datetime
     location: str
-    max_attendees: int =20
+    max_attendees: conint(ge=1)
 
 class EventUpdate(BaseModel):
     name: Optional[str] = None
