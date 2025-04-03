@@ -1,11 +1,13 @@
 from fastapi import APIRouter,Depends,HTTPException,UploadFile, File
-from database import get_db
+from db import get_db
 from sqlalchemy.orm import Session
 from models import Event, Attendee
 from schemas import AttendeeResponse,AttendeeCreate,AttendeeCheckIn
 from sqlalchemy.exc import IntegrityError
 import io
+from sqlalchemy import or_ 
 import pandas as pd
+from typing import List,Optional
 
 router = APIRouter()
 
@@ -69,3 +71,21 @@ def check_in_attendee(attendee: AttendeeCheckIn, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_attendee)
     return db_attendee
+
+@router.get('/attendees/',response_model=List[AttendeeResponse])
+def list_attendees(event_id: Optional[int] = None,name: Optional[str] = None,email: Optional[str] = None,db: Session = Depends(get_db)):
+    """List all attendees with optional filters."""
+    query = db.query(Attendee)
+
+    if event_id is not None:
+        query = query.filter(Attendee.event_id == event_id)
+
+    if name is not None:
+        query = query.filter(
+            or_(Attendee.first_name.ilike(f"%{name}%"), Attendee.last_name.ilike(f"%{name}%"))
+        )
+
+    if email is not None:
+        query = query.filter(Attendee.email.ilike(f"%{email}%"))
+
+    return query.all()

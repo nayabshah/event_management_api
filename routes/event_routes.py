@@ -4,7 +4,7 @@ from models import EventStatus,Event,Attendee
 from fastapi import APIRouter,Depends,HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
-from database import get_db
+from db import get_db
 
 router = APIRouter()
 
@@ -46,6 +46,7 @@ def update_event(event_id: int, event: EventUpdate, db: Session = Depends(get_db
 def list_events(status: Optional[EventStatus] = None, location: Optional[str] = None,start_time: Optional[datetime] = None, end_time: Optional[datetime] = None, db: Session = Depends(get_db)):
     #Automatically set event status to 'completed' if the end_time has passed.
     update_event_status(db)
+    print('*********AFTER UPDATE-EVENT-STATUS')
     query = db.query(Event)
     if status:
         query = query.filter(Event.status == status)

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from models import Base
-from database import engine
+from db import engine
 from routes.event_routes import router as event_router
 from routes.attendee import router as attendee_router
 

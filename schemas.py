@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import Optional
 from datetime import datetime
 from models import EventStatus
 
@@ -19,6 +19,7 @@ class EventUpdate(BaseModel):
     location: Optional[str] = None
     max_attendees: Optional[int] = None
     status: Optional[EventStatus] = None
+
 
 class AttendeeCreate(BaseModel):
     first_name: str

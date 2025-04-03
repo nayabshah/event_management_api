@@ -8,8 +8,8 @@ DATABASE_URL = "sqlite:///./event.db"
 engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-@contextmanager
-def get_db():
+
+def get_db()-> Session:
     db = SessionLocal()
     try:
         yield db
